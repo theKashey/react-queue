@@ -1,6 +1,6 @@
 {
   "name": "react-queue",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -15,15 +15,8 @@
     "format": "ts-react-toolbox format",
     "analyze": "ts-react-toolbox analyze"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/theKashey/react-queue.git"
-  },
-  "keywords": [
-    "react",
-    "renderprop",
-    "suspense"
-  ],
+  "repository": "",
+  "keywords": [],
   "author": "theKashey <thekashey@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -42,7 +35,5 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist"
-  ],
-  "keywords": [],
-  "repository": ""
+  ]
 }
