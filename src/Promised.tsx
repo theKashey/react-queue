@@ -66,6 +66,8 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
         active: false,
       });
       this.promise.resolve(a);
+    } else if (this.state.executed) {
+      console.error('react-queue: trying to finish finished Promised')
     } else {
       console.error('react-queue: trying to finish unstarted Promised')
     }

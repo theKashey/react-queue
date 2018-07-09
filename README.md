@@ -67,7 +67,7 @@ import {Trigger} from 'recondition';
       <Promised channel={channel} priority={1}>
       {({executed, active, done, forwardRed}) => (
         <div ref={forwardRed}>
-          {executed && "task done"}
+          {executed && "task is done"}
           {active && "task is running"}
           <Trigger when={active} then={() => done(42)}/>
         </div>
