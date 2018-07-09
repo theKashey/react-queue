@@ -9,11 +9,27 @@ export type IChannel = {
   reset: () => any
 }
 
+export type IPromisedCallback = {
+  executed: boolean,
+  active: boolean,
+  done:(timeShift?:number) => any,
+  forwardRef: (ref: HTMLElement)=>any
+};
+
 export interface IQueueProps {
   priority?: number;
   channel: IChannel;
   callback: CB;
   children?: React.ReactElement<any>;
+  disabled?: boolean;
+}
+
+export interface IPromisedProps {
+  priority?: number;
+  channel: IChannel;
+  disabled?: boolean;
+
+  children: (props:IPromisedCallback) => React.ReactNode;
 }
 
 export interface Q {

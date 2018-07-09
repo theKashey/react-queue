@@ -88,7 +88,9 @@ export class Scheduler extends React.Component<ISchedulerProps, {
   }
 
   nextQ() {
-    return this.queue.filter(({executed}) => !executed)[0]
+    return this.queue.filter(
+      ({executed, priority, sortOrder}) => !executed && sortOrder<Infinity && priority<Infinity
+    )[0]
   }
 
   executeQ() {

@@ -2,12 +2,12 @@ import * as React from 'react';
 import {IQueueProps} from "./Types";
 
 export class Queue extends React.Component<IQueueProps> {
-  q: any;
-  ref: any;
+  private q: any;
+  private ref: any;
 
   componentDidMount() {
-    const {channel, callback, priority} = this.props;
-    this.q = channel.add(callback, priority || 0, this.ref);
+    const {channel, callback, priority, disabled} = this.props;
+    this.q = channel.add(callback, disabled ? Infinity : (priority || 0), this.ref);
   }
 
   componentWillUnmount() {
@@ -16,8 +16,8 @@ export class Queue extends React.Component<IQueueProps> {
   }
 
   componentDidUpdate() {
-    const {channel, callback, priority} = this.props;
-    channel.replace(this.q, callback, priority || 0, this.ref);
+    const {channel, callback, priority, disabled} = this.props;
+    channel.replace(this.q, callback, disabled ? Infinity : (priority || 0), this.ref);
   }
 
   setRef = (ref: any) => this.ref = ref;
