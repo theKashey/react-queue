@@ -1,7 +1,7 @@
 {
   "name": "react-queue",
   "version": "0.1.0",
-  "description": "",
+  "description": "Declarative task scheduler",
   "main": "dist/index.js",
   "scripts": {
     "test": "ts-react-toolbox test",
