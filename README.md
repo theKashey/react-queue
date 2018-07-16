@@ -14,6 +14,7 @@
 To schedule events one-after another. To play _lazy_ animations in order, correlated with their position on the page.
 
 # API
+## Scheduler
 - `Scheduler` - task scheduler. Collect tasks and execute them with `stepDelay` between in the `priority` order.
   - stepDelay - delay between two events
   - source - priority calculation function
@@ -32,7 +33,8 @@ import {Scheduler} from 'react-queue';
 ```
 `channel` also provides `channel.reset()` function, to clear all `executed` bits, and start everything from the scratch.
 
-- `Queue` - queued event
+## Queue
+- `Queue` - queued event. It just got executed, nothing more. "When", in "when order" - that is the question.
   - `channel` - channel acquired from Scheduler
   - `callback` - callback to execute. In case of callback will return a number, or a promise resolving to number,
   - `priority` - pririty in queue, where 0-s should be executed before 1-s.
@@ -51,11 +53,24 @@ import {Scheduler, Queue} from 'react-queue';
       <Queue channel={channel} callback={doSomething}>
         <div>42</div>
       </Queue>  
+         
+      <Queue channel={channel} callback={() => this.setState({x: 1})}>
+        <div style={{position: 'absolute', top: 50}}> 1 {x == 1 && "selected!!"}</div>
+      </Queue>
+
+      <Queue channel={channel} callback={() => this.setState({x: 2})}>
+        <div style={{position: 'absolute', top: 10}}> 2 {x == 2 && "selected!!"}</div>
+      </Queue>
+
+      <Queue channel={channel} callback={() => this.setState({x: 3})}>
+        <div style={{position: 'absolute', top: 100}}> 3 {x == 3 && "selected!!"}</div>
+      </Queue>
     }
 </Scheduler>
 ```
 
-- `Promised` - promised event. Once it started it should all `done` when it's done.
+## Promised
+- `Promised` - promised event. Once it started it should all `done` when it's done. This is a more complex form of queue, with much stronger feedback.
   - `channel` - channel acquired from Scheduler
   - `children` - render function
 ```js
@@ -76,6 +91,36 @@ import {Trigger} from 'recondition';
     }
 </Scheduler>
 ```  
+
+For example - animation - it will execute one `Promised` after another, and triggering waterfall animation.
+```js
+import {Scheduler, Promised} from 'react-queue';
+import {Trigger} from 'recondition';
+
+<Scheduler stepDelay={300} >
+    {channel => 
+      <Promised channel={channel} autoexecuted>
+      {({executed, active, fired}) => (<div style={styles[executed||active ? styleA : styleB}>Line1</div>)}
+      </Promised>      
+      
+      <Promised channel={channel} autoexecuted>
+      {({executed, active, fired}) => (<div style={styles[executed||active ? styleA : styleB}>Line2</div>)}
+      </Promised>      
+
+      <Promised channel={channel} autoexecuted>
+      {({executed, active, fired}) => (<div style={styles[executed||active ? styleA : styleB}>Line3</div>)}
+      </Promised>      
+
+      <Promised channel={channel} autoexecuted>
+      {({executed, active, fired}) => (<div style={styles[executed||active ? styleA : styleB}>Line4</div>)}
+      </Promised>      
+    }
+</Scheduler>
+```  
+
+
+## Example
+[react-remock + react-queue](https://codesandbox.io/s/q89q2jm8qw) - simple and complex example - "jquery like" image lazy loading with queued execution.
 
 # Licence
  MIT
