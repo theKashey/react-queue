@@ -6,14 +6,15 @@ export type IChannel = {
   add: (cb: CB, priority: number, ref: any) => any;
   remove: (cb: CB) => void;
   replace: (q: any, cb: CB, priority: number, ref: any) => any;
-  reset: () => any
+  reset: () => any;
 }
 
 export type IPromisedCallback = {
-  executed: boolean,
-  active: boolean,
-  done:(timeShift?:number) => any,
-  forwardRef: (ref: HTMLElement)=>any
+  executed: boolean;
+  active: boolean;
+  fired: boolean;
+  done: (timeShift?: number) => boolean;
+  forwardRef: React.Ref<any>;
 };
 
 export interface IQueueProps {
@@ -28,12 +29,14 @@ export interface IPromisedProps {
   priority?: number;
   channel: IChannel;
   disabled?: boolean;
+  autoexecuted?: boolean;
 
-  children: (props:IPromisedCallback) => React.ReactNode;
+  children: (props: IPromisedCallback) => React.ReactNode;
 }
 
 export interface Q {
   cb: CB;
+  index: number;
   priority: number;
   sortOrder: number;
   ref?: HTMLElement;
@@ -43,6 +46,9 @@ export interface Q {
 export interface ISchedulerProps {
   children: (channel: IChannel) => React.ReactNode;
   stepDelay: number;
+  reverse?: boolean;
   observe?: string | number | boolean;
+  noSideEffect?: boolean;
   source?: (q: Q) => number;
+  onEmptyQueue?: () => any;
 }

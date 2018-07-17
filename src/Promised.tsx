@@ -51,6 +51,9 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
     this.setState({
       active: true
     });
+    if(this.props.autoexecuted){
+      this.fulfill(null);
+    }
     return this.promise.p;
   };
 
@@ -68,18 +71,22 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
       this.promise.resolve(a);
     } else if (this.state.executed) {
       console.error('react-queue: trying to finish finished Promised')
+      return false;
     } else {
       console.error('react-queue: trying to finish unstarted Promised')
+      return false;
     }
-  }
+    return true;
+  };
 
   render() {
     const {active, executed} = this.state;
     return this.props.children({
       active,
       executed,
+      fired: active || executed,
       done: this.fulfill,
       forwardRef: this.forwardRef
-    })
+    }) || null
   }
 }

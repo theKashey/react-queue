@@ -7,6 +7,14 @@
   <a href="https://www.npmjs.com/package/react-queue">
    <img src="https://img.shields.io/npm/v/react-queue.svg?style=flat-square" />
   </a>
+  
+  <a href="https://codecov.io/github/thekashey/react-queue">
+     <img src="https://img.shields.io/codecov/c/github/thekashey/react-queue.svg?style=flat-square" />
+   </a>
+   
+   <a href="https://travis-ci.org/thekashey/react-queue">
+     <img src="https://img.shields.io/travis/thekashey/react-queue/master.svg">
+   </a>
 
   <br/>  
 </div>  
@@ -16,9 +24,11 @@ To schedule events one-after another. To play _lazy_ animations in order, correl
 # API
 ## Scheduler
 - `Scheduler` - task scheduler. Collect tasks and execute them with `stepDelay` between in the `priority` order.
-  - stepDelay - delay between two events
-  - source - priority calculation function
-  - observe - cache buster property. Scheduler sorts queue only on element change, in case of using `source` you might need "inform"
+  - `stepDelay` - delay between two events
+  - `[reverse]` - reverses the queue
+  - `[source]` - priority calculation function
+  - `[noSideEffect]` - indicates than Scheduler has no sideEffects, and disables autoupdate on task execution. 
+  - `[observe]` - cache buster property. Scheduler sorts queue only on element change, in case of using `source` you might need "inform"
   it to resort queue.
   
 ```js
@@ -38,9 +48,9 @@ import {Scheduler} from 'react-queue';
   - `channel` - channel acquired from Scheduler
   - `callback` - callback to execute. In case of callback will return a number, or a promise resolving to number,
   - `priority` - pririty in queue, where 0-s should be executed before 1-s.
-  - `disabled` - holds queue execution (sets priority to Infitity).
+  - [`disabled`] - holds queue execution (sets priority to Infitity).
   next tick will be moved by {number}ms. In case of just Promise - next tick will wait to for promise to be resolved.
-  - `children` - any DOM node, Queue will pass as `ref` into scheduler's `source` 
+  - [`children`] - any DOM node, Queue will pass as `ref` into scheduler's `source` 
 
 ```js
 import {Scheduler, Queue} from 'react-queue';
@@ -73,6 +83,7 @@ import {Scheduler, Queue} from 'react-queue';
 - `Promised` - promised event. Once it started it should all `done` when it's done. This is a more complex form of queue, with much stronger feedback.
   - `channel` - channel acquired from Scheduler
   - `children` - render function
+  - [`autoexecuted`] - auto "done" the promised
 ```js
 import {Scheduler, Promised} from 'react-queue';
 import {Trigger} from 'recondition';
@@ -117,7 +128,6 @@ import {Trigger} from 'recondition';
     }
 </Scheduler>
 ```  
-
 
 ## Example
 [react-remock + react-queue](https://codesandbox.io/s/q89q2jm8qw) - simple and complex example - "jquery like" image lazy loading with queued execution.
