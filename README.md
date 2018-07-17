@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>React⏳Queue</h1>
+  <h1>React ⏳ Queue</h1>
   <br/>
   A declarative scheduler
   <br/>
