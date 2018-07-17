@@ -8,12 +8,12 @@
    <img src="https://img.shields.io/npm/v/react-queue.svg?style=flat-square" />
   </a>
   
-  <a href="https://codecov.io/github/thekashey/react-queue">
-     <img src="https://img.shields.io/codecov/c/github/thekashey/react-queue.svg?style=flat-square" />
+  <a href="https://codecov.io/github/theKashey/react-queue">
+     <img src="https://img.shields.io/codecov/c/github/theKashey/react-queue.svg?style=flat-square" />
    </a>
    
-   <a href="https://travis-ci.org/thekashey/react-queue">
-     <img src="https://img.shields.io/travis/thekashey/react-queue/master.svg">
+   <a href="https://travis-ci.org/theKashey/react-queue">
+     <img src="https://img.shields.io/travis/theKashey/react-queue/master.svg">
    </a>
 
   <br/>  
