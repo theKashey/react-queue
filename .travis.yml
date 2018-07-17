@@ -4,6 +4,6 @@ node_js:
 cache: yarn
 script:
   - yarn
-  - yarn test:ci
+  - yarn test:ci && codecov
 notifications:
   email: false

@@ -16,16 +16,14 @@
     "analyze": "ts-react-toolbox analyze"
   },
   "repository": "",
-  "keywords": [],
+  "keywords": ["queue","react","task","scheduler"],
   "author": "theKashey <thekashey@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/theKashey/react-queue/issues"
   },
-  "dependencies": {
-    "proptypes": "^1.1.0"
-  },
   "devDependencies": {
+    "codecov": "^3.0.4",
     "ts-react-toolbox": "^0.1.10"
   },
   "engines": {
