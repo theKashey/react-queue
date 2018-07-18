@@ -1,6 +1,6 @@
 {
   "name": "react-queue",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Declarative task scheduler",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,12 @@
     "analyze": "ts-react-toolbox analyze"
   },
   "repository": "",
-  "keywords": ["queue","react","task","scheduler"],
+  "keywords": [
+    "queue",
+    "react",
+    "task",
+    "scheduler"
+  ],
   "author": "theKashey <thekashey@gmail.com>",
   "license": "MIT",
   "bugs": {
