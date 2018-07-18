@@ -74,7 +74,7 @@ export class Scheduler extends React.Component<ISchedulerProps, {
   };
 
   replace = (q: any, cb: CB, priority: number, ref: any) => {
-    if(q) {
+    if (q) {
       const changedPriority = q.priority !== priority;
       const changedRef = q.ref !== ref;
       q.cb = cb;
@@ -101,7 +101,7 @@ export class Scheduler extends React.Component<ISchedulerProps, {
 
   sortQ() {
     if (this.props.source) {
-      this.queue.forEach(q => q.sortOrder = this.props.source!(q));
+      this.queue.forEach(q => q.sortOrder = q.priority < Infinity ? this.props.source!(q) : q.priority);
     } else {
       this.queue.forEach(q => q.sortOrder = q.priority);
     }
@@ -127,7 +127,7 @@ export class Scheduler extends React.Component<ISchedulerProps, {
           const dt = (typeof result === "number" ? result : 0) || 0;
           const when = Math.max(0, this.props.stepDelay + dt);
           this.scheduleQ(when);
-          if(!this.props.noSideEffect){
+          if (this.props.withSideEffect) {
             this.setState({
               recalculate: 1
             })

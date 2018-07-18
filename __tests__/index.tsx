@@ -60,10 +60,34 @@ describe('Queue', () => {
   it('Dynamic Ordered Queue', (done) => {
     const set: number[] = [];
     mount(
-      <Scheduler stepDelay={1} onEmptyQueue={() => {
+      <Scheduler
+        withSideEffect
+        stepDelay={1}
+        onEmptyQueue={() => {
         expect(set).toEqual([1, 2, 3, 4]);
         done();
       }}>
+        {channel => (
+          <div>
+            <Queue channel={channel} priority={1} callback={() => set.push(1)}/>
+            <Queue channel={channel} priority={set.length == 0 ? 30 : 1} callback={() => set.push(2)}/>
+            <Queue channel={channel} priority={set.length == 0 ? 20 : 2} callback={() => set.push(3)}/>
+            <Queue channel={channel} priority={set.length == 0 ? 10 : 3} callback={() => set.push(4)}/>
+          </div>
+        )}
+      </Scheduler>
+    );
+  });
+
+  it('No sideEffect Dynamic Ordered Queue', (done) => {
+    const set: number[] = [];
+    mount(
+      <Scheduler
+        stepDelay={1}
+        onEmptyQueue={() => {
+          expect(set).toEqual([1, 4, 3, 2]);
+          done();
+        }}>
         {channel => (
           <div>
             <Queue channel={channel} priority={1} callback={() => set.push(1)}/>
@@ -114,11 +138,32 @@ describe('Promised', () => {
     );
   });
 
+  it('Side-effect Executed Promise', (done) => {
+    const set: number[] = [];
+    mount(
+      <Scheduler
+        stepDelay={1}
+        withSideEffect
+        onEmptyQueue={() => {
+        expect(set).toEqual([1, 1, 2, 1, 2, 3, 1, 2, 3]);
+        done();
+      }}>
+        {channel => (
+          <div>
+            <Promised autoexecuted channel={channel}>{({executed}) => executed && set.push(1)}</Promised>
+            <Promised autoexecuted channel={channel}>{({executed}) => executed && set.push(2)}</Promised>
+            <Promised autoexecuted channel={channel}>{({executed}) => executed && set.push(3)}</Promised>
+          </div>
+        )}
+      </Scheduler>
+    );
+  });
+
   it('Executed Promise', (done) => {
     const set: number[] = [];
     mount(
       <Scheduler stepDelay={1} onEmptyQueue={() => {
-        expect(set).toEqual([1, 1, 2, 1, 2, 3, 1, 2, 3]);
+        expect(set).toEqual([1, 2, 3]);
         done();
       }}>
         {channel => (
@@ -135,7 +180,10 @@ describe('Promised', () => {
   it('Pri-Promise', (done) => {
     const set: number[] = [];
     mount(
-      <Scheduler stepDelay={1} onEmptyQueue={() => {
+      <Scheduler
+        withSideEffect
+        stepDelay={1}
+        onEmptyQueue={() => {
         expect(set).toEqual([1, 3, 2]);
         done();
       }}>
@@ -156,6 +204,27 @@ describe('Promised', () => {
     const set: number[] = [];
     mount(
       <Scheduler stepDelay={1} onEmptyQueue={() => {
+        expect(set).toEqual([1, 1, 2, 2, 3, 3]);
+        done();
+      }}>
+        {channel => (
+          <div>
+            <Promised autoexecuted channel={channel}>{({fired}) => fired && set.push(1)}</Promised>
+            <Promised autoexecuted channel={channel}>{({fired}) => fired && set.push(2)}</Promised>
+            <Promised autoexecuted channel={channel}>{({fired}) => fired && set.push(3)}</Promised>
+          </div>
+        )}
+      </Scheduler>
+    );
+  });
+
+  it('sideEffect Ordered Mixed Promise', (done) => {
+    const set: number[] = [];
+    mount(
+      <Scheduler
+        stepDelay={1}
+        withSideEffect
+        onEmptyQueue={() => {
         expect(set).toEqual([1, 1, 1, 2, 2, 1, 2, 3, 3, 1, 2, 3]);
         done();
       }}>

@@ -27,9 +27,10 @@ To schedule events one-after another. To play _lazy_ animations in order, correl
   - `stepDelay` - delay between two events
   - `[reverse]` - reverses the queue
   - `[source]` - priority calculation function
-  - `[noSideEffect]` - indicates than Scheduler has no sideEffects, and disables autoupdate on task execution. 
+  - `[withSideEffect]` - indicates that Scheduler has  side effects, and enabled auto update(re-render) on task execution. __Affects performance__. 
   - `[observe]` - cache buster property. Scheduler sorts queue only on element change, in case of using `source` you might need "inform"
   it to resort queue.
+  
   
 ```js
 import {Scheduler} from 'react-queue';
@@ -129,8 +130,9 @@ import {Trigger} from 'recondition';
 </Scheduler>
 ```  
 
-## Example
+## Examples
 [react-remock + react-queue](https://codesandbox.io/s/q89q2jm8qw) - simple and complex example - "jquery like" image lazy loading with queued execution.
+[react-visibility-sensor + react-queue](https://codesandbox.io/s/6xvr42y6xr) - animate element appearance based on visibility check.
 
 # Licence
  MIT

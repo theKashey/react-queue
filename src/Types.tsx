@@ -48,7 +48,7 @@ export interface ISchedulerProps {
   stepDelay: number;
   reverse?: boolean;
   observe?: string | number | boolean;
-  noSideEffect?: boolean;
+  withSideEffect?: boolean;
   source?: (q: Q) => number;
   onEmptyQueue?: () => any;
 }
