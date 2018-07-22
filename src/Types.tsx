@@ -51,4 +51,6 @@ export interface ISchedulerProps {
   withSideEffect?: boolean;
   source?: (q: Q) => number;
   onEmptyQueue?: () => any;
+  noInitialDelay?: boolean;
+  disabled?: boolean;
 }

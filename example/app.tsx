@@ -8,6 +8,30 @@ export interface AppState {
   x: number
 }
 
+class App0 extends Component <{}, AppState> {
+  state: AppState = {
+    x: 0
+  }
+
+  render() {
+    return (
+      <AppWrapper>
+        --{this.state.x}--
+        <Scheduler stepDelay={5000} noInitialDelay>
+          {channel => (
+            <div>
+              <Queue channel={channel} callback={() => this.setState({x: 1})}/>
+              <Queue channel={channel} callback={() => this.setState({x: 2})}/>
+              <Queue channel={channel} callback={() => this.setState({x: 1})}/>
+            </div>
+          )}
+        </Scheduler>
+        Example!
+      </AppWrapper>
+    )
+  }
+}
+
 class App1 extends Component <{}, AppState> {
   state: AppState = {
     x: 0
@@ -200,6 +224,7 @@ class App4 extends Component <{}, AppState> {
 
 const App = () => (
   <div>
+    <App0 />
     <App4/>
 
     <App1/>

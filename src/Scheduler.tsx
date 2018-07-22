@@ -28,7 +28,8 @@ export class Scheduler extends React.Component<ISchedulerProps, {
   componentDidUpdate(props: ISchedulerProps) {
     if (
       this.props.observe !== props.observe ||
-      this.props.reverse !== props.reverse
+      this.props.reverse !== props.reverse ||
+      this.props.disabled !== props.disabled
     ) {
       this.update();
     }
@@ -36,11 +37,15 @@ export class Scheduler extends React.Component<ISchedulerProps, {
 
   update() {
     this.sortOnQ = true;
-    this.scheduleQ(this.props.stepDelay);
+    this.scheduleQ(
+      this.props.noInitialDelay && this.noExecutedTask()
+        ? 0
+        : this.props.stepDelay
+    );
   }
 
   scheduleQ(when: number) {
-    if (!this.timeout) {
+    if (!this.timeout && !this.props.disabled) {
       this.timeout = window.setTimeout(() => {
         this.timeout = 0;
         if (this.sortOnQ) {
@@ -136,6 +141,10 @@ export class Scheduler extends React.Component<ISchedulerProps, {
     } else {
       this.props.onEmptyQueue && this.props.onEmptyQueue()
     }
+  }
+
+  noExecutedTask() {
+    return !this.queue.find( x => x.executed);
   }
 
   render() {
