@@ -29,6 +29,8 @@ To schedule events one-after another. To play _lazy_ animations in order, correl
   - `[source]` - priority calculation function
   - `[withSideEffect]` - indicates that Scheduler has  side effects, and enabled auto update(re-render) on task execution. __Affects performance__. 
   - `[observe]` - cache buster property. Scheduler sorts queue only on element change, in case of using `source` you might need "inform"
+  - `[noInitialDelay]` - remove delay from the first task.
+  - `[disabled]` - disables ticking
   it to resort queue.
   
   
