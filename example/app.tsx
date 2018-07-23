@@ -8,6 +8,42 @@ export interface AppState {
   x: number
 }
 
+const AppN0 = (function() {
+  const Render: React.SFC<{ children: () => React.ReactNode }> = ({children}) => <div>{children()}</div>
+
+  return class AppN0 extends Component <{}, AppState> {
+    state: AppState = {
+      x: 0
+    }
+
+    render() {
+      const {x} = this.state;
+      return (
+        <AppWrapper>
+          --{this.state.x}--
+          <Scheduler stepDelay={2000}>
+            {channel => (
+              <div>
+                <Render>{() =>
+                  <Render>{() =>
+                    <Promised autoexecuted channel={channel} disabled={x===0}>{({active}) => {
+                      active && x !== 1 && this.setState({x: 1});
+                      return "1"
+                    }}</Promised>
+                  }</Render>
+                }</Render>
+                <Promised autoexecuted channel={channel}>{ ({active}) => { active && x!==2 && this.setState({x:2}); return "2"}}</Promised>
+                <Promised autoexecuted channel={channel}>{ ({active}) => { active && x!==3 && this.setState({x:3}); return "3"}}</Promised>
+              </div>
+            )}
+          </Scheduler>
+          Example!
+        </AppWrapper>
+      )
+    }
+  }
+})();
+
 class App0 extends Component <{}, AppState> {
   state: AppState = {
     x: 0
@@ -224,6 +260,7 @@ class App4 extends Component <{}, AppState> {
 
 const App = () => (
   <div>
+    <AppN0 />
     <App0 />
     <App4/>
 

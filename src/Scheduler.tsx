@@ -11,15 +11,17 @@ const diff = (a: Q, b: Q): number => {
 
 export class Scheduler extends React.Component<ISchedulerProps, {
   recalculate: number;
+  queue: Q[];
 }> {
-
-  state = {
-    recalculate: 0
-  };
 
   private queue: Q[] = [];
   private timeout: number = 0;
   private sortOnQ: boolean = false;
+
+  state = {
+    recalculate: 0,
+    queue: this.queue
+  };
 
   componentWillUnmount() {
     window.clearTimeout(this.timeout);

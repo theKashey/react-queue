@@ -39,6 +39,39 @@ describe('Queue', () => {
     );
   });
 
+  it('Nested Ordered Queue', (done) => {
+    const set: number[] = [];
+    const Render: React.SFC<{ children: () => React.ReactNode }> = ({children}) => <div>{children()}</div>
+    const Q = ({channel}:{channel:any}) => <Queue channel={channel} callback={() => set.push(2)}/>
+    const QQ = ({channel}:{channel:any}) => (
+      <Render>
+        { () => <Q channel={channel} />}
+      </Render>
+    );
+    mount(
+      <Scheduler stepDelay={1} onEmptyQueue={() => {
+        expect(set).toEqual([1, 2, 3]);
+        done();
+      }}>
+        {channel => (
+          <div>
+            <div>
+              <div>
+                <Queue channel={channel} callback={() => set.push(1)}/>
+              </div>
+            </div>
+            <Render>
+              {() =>
+                <QQ channel={channel}/>
+              }
+            </Render>
+            <Queue channel={channel} callback={() => set.push(3)}/>
+          </div>
+        )}
+      </Scheduler>
+    );
+  });
+
   it('P-Ordered Queue', (done) => {
     const set: number[] = [];
     mount(
@@ -64,9 +97,9 @@ describe('Queue', () => {
         withSideEffect
         stepDelay={1}
         onEmptyQueue={() => {
-        expect(set).toEqual([1, 2, 3, 4]);
-        done();
-      }}>
+          expect(set).toEqual([1, 2, 3, 4]);
+          done();
+        }}>
         {channel => (
           <div>
             <Queue channel={channel} priority={1} callback={() => set.push(1)}/>
@@ -145,9 +178,9 @@ describe('Promised', () => {
         stepDelay={1}
         withSideEffect
         onEmptyQueue={() => {
-        expect(set).toEqual([1, 1, 2, 1, 2, 3, 1, 2, 3]);
-        done();
-      }}>
+          expect(set).toEqual([1, 1, 2, 1, 2, 3, 1, 2, 3]);
+          done();
+        }}>
         {channel => (
           <div>
             <Promised autoexecuted channel={channel}>{({executed}) => executed && set.push(1)}</Promised>
@@ -184,9 +217,9 @@ describe('Promised', () => {
         withSideEffect
         stepDelay={1}
         onEmptyQueue={() => {
-        expect(set).toEqual([1, 3, 2]);
-        done();
-      }}>
+          expect(set).toEqual([1, 3, 2]);
+          done();
+        }}>
         {channel => (
           <div>
             <Promised autoexecuted priority={1} channel={channel}>{({active}) => active && set.push(1)}</Promised>
@@ -225,9 +258,9 @@ describe('Promised', () => {
         stepDelay={1}
         withSideEffect
         onEmptyQueue={() => {
-        expect(set).toEqual([1, 1, 1, 2, 2, 1, 2, 3, 3, 1, 2, 3]);
-        done();
-      }}>
+          expect(set).toEqual([1, 1, 1, 2, 2, 1, 2, 3, 3, 1, 2, 3]);
+          done();
+        }}>
         {channel => (
           <div>
             <Promised autoexecuted channel={channel}>{({fired}) => fired && set.push(1)}</Promised>
@@ -256,6 +289,31 @@ describe('Promised', () => {
       </Scheduler>
     );
   });
+
+  it('Call nested Promise', (done) => {
+    const set: number[] = [];
+    const Render: React.SFC<{ children: () => React.ReactNode }> = ({children}) => <div>{children()}</div>
+    const Q = ({channel}:{channel:any}) => <Promised channel={channel}>{({active, done}) => active && done() && set.push(2)}</Promised>
+    const QQ = ({channel}:{channel:any}) => (
+      <Render>
+        { () => <Q channel={channel} />}
+      </Render>
+    );
+    mount(
+      <Scheduler stepDelay={1} onEmptyQueue={() => {
+        expect(set).toEqual([1, 2, 3]);
+        done();
+      }}>
+        {channel => (
+          <div>
+            <Promised channel={channel}>{({active, done}) => active && done() && set.push(1)}</Promised>
+            <QQ channel={channel}/>
+            <Promised channel={channel}>{({active, done}) => active && done() && set.push(3)}</Promised>
+          </div>
+        )}
+      </Scheduler>
+    );
+  });
 });
 
 describe("Observer Q", () => {
@@ -268,7 +326,7 @@ describe("Observer Q", () => {
           expect(set).toEqual([2, 1, 3]);
           done();
         }}
-        source={({ref}) => +(ref!.getAttribute('data-p')||0)}
+        source={({ref}) => +(ref!.getAttribute('data-p') || 0)}
       >
         {channel => (
           <div>
