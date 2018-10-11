@@ -34,6 +34,9 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
 
   componentDidMount() {
     const {channel, priority, disabled} = this.props;
+    if (!channel) {
+      throw new Error('Queue: please provide a channel props');
+    }
     this.q = channel.add(this.callback, disabled ? Infinity : (priority || 0), this.ref);
   }
 
@@ -51,7 +54,7 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
     this.setState({
       active: true
     });
-    if(this.props.autoexecuted){
+    if (this.props.autoexecuted) {
       this.fulfill(null);
     }
     return this.promise.p;

@@ -7,6 +7,9 @@ export class Queue extends React.Component<IQueueProps> {
 
   componentDidMount() {
     const {channel, callback, priority, disabled} = this.props;
+    if (!channel) {
+      throw new Error('Queue: please provide a channel props');
+    }
     this.q = channel.add(callback, disabled ? Infinity : (priority || 0), this.ref);
   }
 
