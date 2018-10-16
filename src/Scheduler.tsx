@@ -97,7 +97,7 @@ export class Scheduler extends React.Component<ISchedulerProps, {
   reset = () => {
     this.queue.forEach(q => q.executed = false);
     this.update();
-  }
+  };
 
   channel: IChannel = {
     add: this.add,

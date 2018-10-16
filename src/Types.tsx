@@ -29,7 +29,7 @@ export interface IPromisedProps {
   priority?: number;
   channel: IChannel;
   disabled?: boolean;
-  autoexecuted?: boolean;
+  autoexecuted?: boolean | number;
 
   children: (props: IPromisedCallback) => React.ReactNode;
 }

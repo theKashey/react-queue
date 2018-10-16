@@ -49,7 +49,7 @@ import {Scheduler} from 'react-queue';
 ## Queue
 - `Queue` - queued event. It just got executed, nothing more. "When", in "when order" - that is the question.
   - `channel` - channel acquired from Scheduler
-  - `callback` - callback to execute. In case of callback will return a number, or a promise resolving to number,
+  - `callback` - callback to execute. In case if callback will return a number, or a promise resolving to number, it would be used to _shift_ delay to the next step.
   - `priority` - pririty in queue, where 0-s should be executed before 1-s.
   - [`disabled`] - holds queue execution (sets priority to Infitity).
   next tick will be moved by {number}ms. In case of just Promise - next tick will wait to for promise to be resolved.
@@ -86,7 +86,7 @@ import {Scheduler, Queue} from 'react-queue';
 - `Promised` - promised event. Once it started it should all `done` when it's done. This is a more complex form of queue, with much stronger feedback.
   - `channel` - channel acquired from Scheduler
   - `children` - render function
-  - [`autoexecuted`] - auto "done" the promised
+  - [`autoexecuted`] - auto "done" the promised. boolean or number. If number - would be used to shift next step.
 ```js
 import {Scheduler, Promised} from 'react-queue';
 import {Trigger} from 'recondition';
@@ -98,7 +98,22 @@ import {Trigger} from 'recondition';
         <div ref={forwardRed}>
           {executed && "task is done"}
           {active && "task is running"}
-          <Trigger when={active} then={() => done(42)}/>
+          // don't call anything in render
+          <Trigger when={active} then={() => done(42/* make next step by 42ms later*/)}/>
+        </div>
+      )
+      </Promised>      
+    }
+</Scheduler>
+
+// this code has the same behavior
+<Scheduler stepDelay={1000} >
+    {channel => 
+      <Promised channel={channel} priority={1} autoexecuted={42}>
+      {({executed, active, done, forwardRed}) => (
+        <div ref={forwardRed}>
+          {executed && "task is done"}
+          {active && "task is running"}          
         </div>
       )
       </Promised>      

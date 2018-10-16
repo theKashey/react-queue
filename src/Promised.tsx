@@ -54,8 +54,9 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
     this.setState({
       active: true
     });
-    if (this.props.autoexecuted) {
-      this.fulfill(null);
+    const {autoexecuted} = this.props;
+    if (autoexecuted) {
+      this.fulfill(autoexecuted);
     }
     return this.promise.p;
   };
