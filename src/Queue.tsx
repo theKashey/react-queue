@@ -6,11 +6,15 @@ export class Queue extends React.Component<IQueueProps> {
   private ref: any;
 
   componentDidMount() {
-    const {channel, callback, priority, disabled} = this.props;
+    const {channel, callback, priority = 0xFFFFFF, shift = 0, disabled} = this.props;
     if (!channel) {
       throw new Error('Queue: please provide a channel props');
     }
-    this.q = channel.add(callback, disabled ? Infinity : (priority || 0), this.ref);
+    this.q = channel.add(
+      callback, {
+        priority: disabled ? Infinity : (priority || 0),
+        shift: shift
+      }, this.ref);
   }
 
   componentWillUnmount() {
@@ -19,8 +23,15 @@ export class Queue extends React.Component<IQueueProps> {
   }
 
   componentDidUpdate() {
-    const {channel, callback, priority, disabled} = this.props;
-    channel.replace(this.q, callback, disabled ? Infinity : (priority || 0), this.ref);
+    const {channel, callback, priority = 0xFFFFFF, shift = 0, disabled} = this.props;
+    channel.replace(
+      this.q,
+      callback, {
+        priority: disabled ? Infinity : (priority || 0),
+        shift: shift
+      },
+      this.ref
+    );
   }
 
   setRef = (ref: any) => this.ref = ref;

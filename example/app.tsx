@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Component} from 'react';
 import {AppWrapper} from './styled';
 import {Scheduler} from "../src/Scheduler";
-import {Promised, Queue} from "../src";
+import {FlattenPriorityGroup, Promised, Queue} from "../src";
 
 export interface AppState {
   x: number
@@ -21,7 +21,7 @@ const AppN0 = (function() {
       return (
         <AppWrapper>
           --{this.state.x}--
-          <Scheduler stepDelay={2000}>
+          <Scheduler stepDelay={500}>
             {channel => (
               <div>
                 <Render>{() =>
@@ -32,8 +32,21 @@ const AppN0 = (function() {
                     }}</Promised>
                   }</Render>
                 }</Render>
-                <Promised autoexecuted channel={channel}>{ ({active}) => { active && x!==2 && this.setState({x:2}); return "2"}}</Promised>
-                <Promised autoexecuted channel={channel}>{ ({active}) => { active && x!==3 && this.setState({x:3}); return "3"}}</Promised>
+                <Promised autoexecuted channel={channel}>{ ({active}) => { active && x!==2 && console.log('P1') && this.setState({x:2}); return "2"}}</Promised>
+                <Promised autoexecuted channel={channel}>{ ({active}) => { active && x!==3 && console.log('P2')&& this.setState({x:3})&& console.log('P2');; return "3"}}</Promised>
+                <Promised autoexecuted channel={channel} shift={-1}>{ ({active}) => { active && x!==4 && console.log('P3')&& this.setState({x:4})&& console.log('P3');; return "4"}}</Promised>
+                <Promised priority={1} autoexecuted channel={channel}>{ ({active}) => { active && console.log('P0'); return "3"}}</Promised>
+                <FlattenPriorityGroup channel={channel} shift={-4} priority={1}>
+                  {
+                    pchannel => (
+                    <React.Fragment>
+                      <Promised priority={2} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P11'); return "1"}}</Promised>
+                      <Promised priority={1} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P12'); return "2"}}</Promised>
+                      <Promised priority={3} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P13'); return "3"}}</Promised>
+                      <Promised priority={0} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P00'); return "0"}}</Promised>
+                    </React.Fragment>
+                    )}
+                </FlattenPriorityGroup>
               </div>
             )}
           </Scheduler>
@@ -261,14 +274,14 @@ class App4 extends Component <{}, AppState> {
 const App = () => (
   <div>
     <AppN0 />
-    <App0 />
-    <App4/>
+    {/*<App0 />*/}
+    {/*<App4/>*/}
 
-    <App1/>
-    <App1_1/>
-    <App2/>
-    <App2_1/>
-    <App3/>
+    {/*<App1/>*/}
+    {/*<App1_1/>*/}
+    {/*<App2/>*/}
+    {/*<App2_1/>*/}
+    {/*<App3/>*/}
 
   </div>
 )

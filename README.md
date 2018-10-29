@@ -51,6 +51,7 @@ import {Scheduler} from 'react-queue';
   - `channel` - channel acquired from Scheduler
   - `callback` - callback to execute. In case if callback will return a number, or a promise resolving to number, it would be used to _shift_ delay to the next step.
   - `priority` - pririty in queue, where 0-s should be executed before 1-s.
+  - [`shift`] - sub priority change. `shift={-1}` will swap this task with previous sibling.
   - [`disabled`] - holds queue execution (sets priority to Infitity).
   next tick will be moved by {number}ms. In case of just Promise - next tick will wait to for promise to be resolved.
   - [`children`] - any DOM node, Queue will pass as `ref` into scheduler's `source` 
@@ -82,11 +83,45 @@ import {Scheduler, Queue} from 'react-queue';
 </Scheduler>
 ```
 
+## FlattenPriorityGroup
+- `FlattenPriorityGroup` - "flattens" all priority changes inside. Could help manage nested tasks.
+  - `channel` - channel acquired from Scheduler
+  - [`children`] - render function  
+  - [`priority`] - task priority. Would be set for all nested tasks.
+  - [`shift`] - sub priority change. `shift={-1}` will swap this task with previous sibling.
+  - [`disabled`] - holds queue execution (sets priority to Infitity).
+  
+In the next example executing order would be - 2, 1, 4, 3.
+```js
+ <Scheduler stepDelay={1000} >
+   {channel => (
+      <React.Fragment>
+          <FlattenPriorityGroup channel={channel}>
+          { pchannel => [
+            <Promised priority={1}>1</Promised>,
+            <Promised priority={0}>2</Promised>
+          ]}
+          </FlattenPriorityGroup>
+          <FlattenPriorityGroup channel={channel}>
+          { pchannel => [
+             <Promised priority={1}>3</Promised>,
+             <Promised priority={0}>4</Promised>
+          ]}
+          </FlattenPriorityGroup>
+      </React.Fragment>
+   )}  
+</Scheduler>   
+``` 
+
+
 ## Promised
 - `Promised` - promised event. Once it started it should all `done` when it's done. This is a more complex form of queue, with much stronger feedback.
   - `channel` - channel acquired from Scheduler
-  - `children` - render function
+  - [`children`] - render function
   - [`autoexecuted`] - auto "done" the promised. boolean or number. If number - would be used to shift next step.
+  - [`priority`] - task priority. Lower goes first
+  - [`shift`] - sub priority change. `shift={-1}` will swap this task with previous sibling.
+  - [`disabled`] - holds queue execution (sets priority to Infitity).
 ```js
 import {Scheduler, Promised} from 'react-queue';
 import {Trigger} from 'recondition';

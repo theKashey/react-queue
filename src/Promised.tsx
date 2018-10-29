@@ -33,11 +33,16 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
   private promise = deffered();
 
   componentDidMount() {
-    const {channel, priority, disabled} = this.props;
+    const {channel, priority = 0xFFFFFF, shift = 0, disabled} = this.props;
     if (!channel) {
       throw new Error('Queue: please provide a channel props');
     }
-    this.q = channel.add(this.callback, disabled ? Infinity : (priority || 0), this.ref);
+    this.q = channel.add(
+      this.callback, {
+        priority: disabled ? Infinity : (priority || 0),
+        shift: shift
+      },
+      this.ref);
   }
 
   componentWillUnmount() {
@@ -46,8 +51,15 @@ export class Promised extends React.Component<IPromisedProps, PromisedState> {
   }
 
   componentDidUpdate() {
-    const {channel, priority, disabled} = this.props;
-    channel.replace(this.q, this.callback, disabled ? Infinity : (priority || 0), this.ref);
+    const {channel, priority = 0xFFFFFF, shift = 0, disabled} = this.props;
+    channel.replace(
+      this.q,
+      this.callback, {
+        priority: disabled ? Infinity : (priority || 0),
+        shift: shift
+      },
+      this.ref
+    );
   }
 
   callback = () => {
