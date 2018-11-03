@@ -41,7 +41,7 @@ const AppN0 = (function() {
                     pchannel => (
                     <React.Fragment>
                       <Promised priority={2} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P11'); return "1"}}</Promised>
-                      <Promised priority={1} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P12'); return "2"}}</Promised>
+                      <Promised disabled priority={1} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P12'); return "2"}}</Promised>
                       <Promised priority={3} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P13'); return "3"}}</Promised>
                       <Promised priority={0} channel={pchannel} autoexecuted>{ ({active}) => { active && console.log('P00'); return "0"}}</Promised>
                     </React.Fragment>

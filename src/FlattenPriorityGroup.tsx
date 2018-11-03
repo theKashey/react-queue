@@ -30,7 +30,7 @@ export class FlattenPriorityGroup extends React.Component<IGroupProps> {
     const index = this.queue.indexOf(q);
     if (index > 0) {
       this.queue.splice(index, 1);
-      this.props.channel.remove(this.queue[index].q);
+      this.props.channel.remove(q.q);
     }
   };
 
@@ -71,12 +71,13 @@ export class FlattenPriorityGroup extends React.Component<IGroupProps> {
     if (this.props.disabled) {
       return;
     }
-    const {channel, shift = 0, priority} = this.props;
+    const {channel, shift = 0, priority: blockPriority} = this.props;
     channel.schedule(this, () => {
       this.sortQ();
       this.queue.forEach((q, index) => {
         if (q.index0 !== index || q.update || !q.q) {
-          const {cb, index0, ref} = q;
+          const {cb, index0, ref, priority: qPriority} = q;
+          const priority = qPriority < Infinity ? blockPriority : qPriority;
           q.update = false;
           if (q.q) {
             channel.replace(q.q, cb, {priority, shift: index0 - index + shift}, ref);
