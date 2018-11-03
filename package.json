@@ -2,6 +2,7 @@
   "name": "react-queue",
   "version": "0.6.0",
   "description": "Declarative task scheduler",
+  "sideEffects": false,
   "scripts": {
     "test": "ts-react-toolbox test",
     "bootstrap": "ts-react-toolbox init",
