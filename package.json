@@ -1,6 +1,6 @@
 {
   "name": "react-queue",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Declarative task scheduler",
   "sideEffects": false,
   "scripts": {
